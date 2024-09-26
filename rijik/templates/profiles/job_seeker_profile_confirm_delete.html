@@ -1,0 +1,10 @@
+{% extends 'profiles/base.html' %}
+
+{% block content %}
+  <h1>Are you sure you want to delete "{{ job_seeker_profile.name }}"?</h1>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm</button>
+    <a href="#" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

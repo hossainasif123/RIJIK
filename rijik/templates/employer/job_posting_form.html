@@ -1,0 +1,13 @@
+{% extends "profiles/base.html" %}
+
+{% block title %}Create Job Posting{% endblock %}
+
+{% block content %}
+    <h1>Create a New Job Posting</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Submit Job Posting</button>
+    </form>
+    <a href="{% url 'employer:job-posting-list' %}">Back to Job Postings</a>
+{% endblock %}

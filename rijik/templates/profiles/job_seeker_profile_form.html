@@ -1,0 +1,149 @@
+{% extends 'profiles/base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/form.css' %}">
+
+<div class="form-container">
+    <h1>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Job Seeker Profile</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Personal Information Section -->
+        <h3>Personal Information</h3>
+        <div class="form-group">
+            {{ form.name.label_tag }}
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            {{ form.date_of_birth.label_tag }}
+            {{ form.date_of_birth }}
+        </div>
+        <div class="form-group">
+            {{ form.religion.label_tag }}
+            {{ form.religion }}
+        </div>
+        <div class="form-group">
+            {{ form.nationality.label_tag }}
+            {{ form.nationality }}
+        </div>
+        <div class="form-group">
+            {{ form.nid_no.label_tag }}
+            {{ form.nid_no }}
+        </div>
+        <div class="form-group">
+            {{ form.blood_group.label_tag }}
+            {{ form.blood_group }}
+        </div>
+
+        <!-- Contact Information Section -->
+        <h3>Contact Information</h3>
+        <div class="form-group">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+        </div>
+        <div class="form-group">
+            {{ form.github_link.label_tag }}
+            {{ form.github_link }}
+        </div>
+        <div class="form-group">
+            {{ form.linkedin_link.label_tag }}
+            {{ form.linkedin_link }}
+        </div>
+
+        <!-- Professional Information Section -->
+        <h3>Professional Information</h3>
+        <div class="form-group">
+            {{ form.resume.label_tag }}
+            {{ form.resume }}
+        </div>
+        <div class="form-group">
+            {{ form.portfolio.label_tag }}
+            {{ form.portfolio }}
+        </div>
+
+        <!-- Skills Section -->
+        <h3>Skills</h3>
+        <div id="skills-formset">
+            {% for form in skill_formset %}
+                <div class="form-group">
+                    {{ form.name.label_tag }}
+                    {{ form.name }}
+                </div>
+                {% if form.instance.pk %}
+                    <button type="button" class="btn-remove-skill" onclick="removeSkill(this)">Remove</button>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <button type="button" id="add-skill" class="btn-add-skill">Add Skill</button>
+
+        <!-- Experience Section -->
+        <h3>Experience</h3>
+        <div class="form-group">
+            {{ form.experience.label_tag }}
+            {{ form.experience }}
+        </div>
+        
+
+        <!-- Education Section -->
+        <h3>Education</h3>
+        <div class="form-group">
+            {{ form.education.label_tag }}
+            {{ form.education }}
+        </div>
+        <div class="form-group">
+            {{ form.education_level.label_tag }}
+            {{ form.education_level }}
+        </div>
+
+        <!-- Job Preferences Section -->
+        <h3>Job Preferences</h3>
+        <div class="form-group">
+            {{ form.location.label_tag }}
+            {{ form.location }}
+        </div>
+        <div class="form-group">
+            {{ form.availability.label_tag }}
+            {{ form.availability }}
+        </div>
+        <div class="form-group">
+            {{ form.desired_salary.label_tag }}
+            {{ form.desired_salary }}
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+            <button type="submit" class="btn-submit">{% if form.instance.pk %}Update{% else %}Create{% endif %}</button>
+            
+        </div>
+    </form>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let skillFormset = document.getElementById('skills-formset');
+    let addSkillButton = document.getElementById('add-skill');
+
+    // Add Skill Form
+    addSkillButton.addEventListener('click', function() {
+        let formCount = skillFormset.children.length;
+        let newForm = document.createElement('div');
+        newForm.className = 'form-group';
+        newForm.innerHTML = `
+            <label for="id_skill-${formCount}-name">Skill ${formCount + 1}:</label>
+            <input type="text" name="skill-${formCount}-name" id="id_skill-${formCount}-name" class="form-control">
+            <button type="button" class="btn-remove-skill" onclick="removeSkill(this)">Remove</button>
+        `;
+        skillFormset.appendChild(newForm);
+    });
+
+    // Remove Skill Form
+    window.removeSkill = function(button) {
+        let formGroup = button.parentElement;
+        formGroup.remove();
+    };
+});
+</script>
+
+{% endblock %}

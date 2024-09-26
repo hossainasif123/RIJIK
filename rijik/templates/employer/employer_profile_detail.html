@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{{ employer_profile.company_name }}'s Profile</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <div class="profile-container">
+        <h1 class="profile-name">{{ employer_profile.company_name }}'s Profile</h1>
+
+        <!-- Company Logo -->
+        {% if employer_profile.logo %}
+            <img src="{{ employer_profile.logo.url }}" alt="{{ employer_profile.company_name }}'s logo" class="profile-logo">
+        {% else %}
+            <img src="{% static 'images/default-logo.png' %}" alt="Default company logo" class="profile-logo">
+        {% endif %}
+
+        <!-- Company Information -->
+        <ul class="profile-info">
+            <li><strong>Company Name:</strong> {{ employer_profile.company_name }}</li>
+            <li><strong>Description:</strong> {{ employer_profile.description }}</li>
+            <li><strong>Location:</strong> {{ employer_profile.location }}</li>
+        </ul>
+
+        <!-- Job Listings -->
+        <h3>Job Listings</h3>
+        {% if employer_profile.job_listings.exists %}
+            <ul class="job-listings">
+                {% for job in employer_profile.job_listings.all %}
+                    <li>
+                        <a href="{% url 'jobs:job-detail' job.pk %}">
+                            {{ job.title }} - {{ job.location }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No job listings available.</p>
+        {% endif %}
+
+        <!-- Buttons for Profile Management (if logged in as employer) -->
+        {% if request.user == employer_profile.user %}
+        <div class="button-container">
+           
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+
+</html>

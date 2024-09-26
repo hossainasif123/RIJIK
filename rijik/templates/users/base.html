@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>{% block title %}Rijik - Job Portal{% endblock %}</title>
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <ul class="navbar-right">
+            <!-- Home and Job Listings links for all users -->
+            <li><a href="{% url 'users:dashboard' %}">Home</a></li>
+
+            <li><a href="{% url 'profiles:jobseekerprofile-create' %}" class="btn btn-primary">Create Job Seeker Profile</a></li>
+            <!-- If the user is authenticated, show appropriate links based on role -->
+            {% if request.user.is_authenticated %}
+    
+                <!-- If the user is an Employer, show Employer Profile and Create Job links -->
+                {% if request.user.role == 'employer' %}
+                    <li><a href="{% url 'profiles:employer_profile' request.user.employerprofile.pk %}">View Employer Profile</a></li>
+                    <li><a href="{% url 'jobs:job_listing_create' %}" class="btn btn-primary">Create Job Listing</a></li>
+            
+                <!-- If the user is a Job Seeker, show Job Seeker Profile -->
+                {% elif request.user.role == 'job_seeker' %}
+                    <!-- If the Job Seeker has a profile, show the profile -->
+                    {% if request.user.jobseekerprofile.exists  %}
+                        <li><a href="{% url 'users:show-profile' request.user.jobseekerprofile.pk %}" class="btn btn-primary">View Job Seeker Profile</a></li>
+                    <!-- If the Job Seeker doesn't have a profile, show Create Profile option -->
+                    {% else %}
+                        <li><a href="{% url 'profiles:jobseekerprofile-create' %}" class="btn btn-primary">Create Job Seeker Profile</a></li>
+                    {% endif %}
+                {% endif %}
+
+                <!-- Logout option for all authenticated users -->
+                <li><a href="{% url 'users:logout' %}">Logout</a></li>
+             
+            {% else %}
+                <!-- Login and Register options for unauthenticated users -->
+                <li><a href="{% url 'users:login' %}">Login</a></li>
+                <li><a href="{% url 'users:register' %}">Register</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!-- Main content -->
+    <div class="content">
+        {% block content %}
+        <!-- Page-specific content will go here -->
+        {% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+
+</html>

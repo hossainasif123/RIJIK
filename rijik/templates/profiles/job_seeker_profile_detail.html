@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% extends 'profiles/base.html' %}
+    
+    {% block content %}
+    {% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ job_seeker_profile.user.username }}'s Profile</title>
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+</head>
+
+<body>
+    <div class="profile-container">
+        <h1 class="profile-name">{{ job_seeker_profile.user.username}}'s Profile</h1>
+        
+        <!-- Profile Image -->
+        {% if job_seeker_profile.profile_photo %}
+            <img src="{{ job_seeker_profile.profile_photo.url }}" alt="{{ job_seeker_profile.user.username }}'s photo" class="profile-photo">
+        {% else %}
+            <img src="{% static 'images/default-profile.png' %}" alt="Default profile photo" class="profile-photo">
+        {% endif %}
+        
+        <!-- Personal Information -->
+        <ul class="profile-info">
+            <li><strong>Date of Birth:</strong> {{ job_seeker_profile.date_of_birth|date:"F d, Y" }}</li>
+            <li><strong>Religion:</strong> {{ job_seeker_profile.religion }}</li>
+            <li><strong>Nationality:</strong> {{ job_seeker_profile.nationality }}</li>
+            <li><strong>National ID No:</strong> {{ job_seeker_profile.nid_no }}</li>
+            <li><strong>Blood Group:</strong> {{ job_seeker_profile.blood_group }}</li>
+        </ul>
+        
+        <!-- Contact Information -->
+        <h3>Contact Information</h3>
+        <ul class="profile-info">
+            <li><strong>Email:</strong> {{ job_seeker_profile.user.email }}</li>
+            <li><strong>GitHub Link:</strong> <a href="{{ job_seeker_profile.github_link }}" target="_blank">{{ job_seeker_profile.github_link }}</a></li>
+            <li><strong>LinkedIn Link:</strong> <a href="{{ job_seeker_profile.linkedin_link }}" target="_blank">{{ job_seeker_profile.linkedin_link }}</a></li>
+        </ul>
+
+        <!-- Professional Information -->
+        <h3>Professional Information</h3>
+        <ul class="profile-info">
+            <li><strong>Resume:</strong> <a href="{{ job_seeker_profile.resume.url }}" download>Download Resume</a></li>
+            <li><strong>Portfolio:</strong> <a href="{{ job_seeker_profile.portfolio }}" target="_blank">{{ job_seeker_profile.portfolio }}</a></li>
+        </ul>
+
+        <!-- Skills -->
+        <h3>Skills</h3>
+        <ul class="profile-info">
+            {% for skill in skills %}
+                <li>{{ skill.name }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Experience -->
+        <h3>Experience</h3>
+        <ul class="profile-info">
+            <li>{{ job_seeker_profile.experience }}</li>
+        </ul>
+
+        <!-- Education -->
+        <h3>Education</h3>
+        <ul class="profile-info">
+            <li><strong>Education:</strong> {{ job_seeker_profile.education }}</li>
+            <li><strong>Education Level:</strong> {{ job_seeker_profile.education_level }}</li>
+        </ul>
+
+        <!-- Job Preferences -->
+        <h3>Job Preferences</h3>
+        <ul class="profile-info">
+            <li><strong>Location:</strong> {{ job_seeker_profile.location }}</li>
+            <li><strong>Availability:</strong> {{ job_seeker_profile.availability }}</li>
+            <li><strong>Desired Salary:</strong> {{ job_seeker_profile.desired_salary }}</li>
+        </ul>
+
+        <!-- Buttons for Profile Management -->
+        {% if request.user == job_seeker_profile.user %}
+        <div class="button-container">
+            <a href="{% url 'profiles:jobseekerprofile-update' job_seeker_profile.id %}" class="btn btn-primary">Edit Profile</a>
+            <a href="{% url 'profiles:jobseekerprofile-delete' job_seeker_profile.id %}" class="btn btn-danger">Delete Profile</a>
+            <a href="{% url 'users:jobseekerprofile-list' %}" class="btn btn-secondary">Return to Profiles</a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Modal for Image Viewing (optional) -->
+    <div id="profileImageModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <img id="modalImage" style="width: 100%; height: auto;">
+        </div>
+    </div>
+
+    <script src="{% static 'js/profile.js' %}"></script>
+    {% endblock %}
+</body>
+
+</html>
